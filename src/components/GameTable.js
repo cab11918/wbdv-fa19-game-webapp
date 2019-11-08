@@ -9,6 +9,7 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import withStyles from "@material-ui/core/styles/withStyles";
+import {Typography} from "@material-ui/core";
 
 const useStyles = ({
   root: {
@@ -47,7 +48,13 @@ class SimpleTable extends React.Component {
 
     return (
 
+        <div className={classes.root}>
+
+        <Typography variant="h1">
+          Games
+        </Typography>
         <Paper className={classes.root} m="auto">
+
           <Table className={classes.table} aria-label="simple table">
             <TableHead className={classes.th}>
               <TableRow>
@@ -74,8 +81,8 @@ class SimpleTable extends React.Component {
                       <div className={classes.tr}>
                         <img src={game.background_image}
                              className={classes.img}/><Link href="#"
-                                                            onClick={() => alert(
-                                                                "")}>{game.name}</Link>
+                                                            onClick={() => this.props.getDetails(
+                                                                game.id)}>{game.name}</Link>
                       </div>
                     </TableCell>
                     <TableCell align="right">
@@ -93,6 +100,8 @@ class SimpleTable extends React.Component {
             </TableBody>
           </Table>
         </Paper>
+
+        </div>
     );
   }
 
