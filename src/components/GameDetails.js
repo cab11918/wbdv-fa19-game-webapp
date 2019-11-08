@@ -36,11 +36,12 @@ const useStyles = (theme => ({
   img: {
     width: 300,
     marginBottom: '5px',
+    borderRadius: 5
   },
 
   card: {
-    marginBottom: '15px',
-    marginTop: '15px'
+    marginBottom: '5px',
+    marginTop: '5px'
   },
   chip: {
     fontSize: 10,
@@ -75,41 +76,70 @@ class GameDetails extends React.Component {
 
           <Paper className={classes.paper}>
 
-            <Typography variant="h3">
-              {this.props.game.name}
 
-            </Typography>
+
 
 
             <Card className={classes.card}>
 
               <CardContent>
+
+
+                <Typography variant="h3">
+                  {this.props.game.name}
+
+                </Typography>
+
                 <Grid
                     container
                     direction="row"
-                    justify="center"
-                    alignItems="flex-start"
+
                 >
 
                   <Grid item xs={6}>
 
-                    <img src={this.props.game.background_image}
-                         className={classes.img}/>
+                    <div>
+                      <img  src={this.props.game.background_image}
+                           className={classes.img}/>
+
+                    </div>
 
 
                   </Grid>
 
                   <Grid item xs={6}>
-                    {this.props.tags.splice(0, 5).map(tag => (
-                        <Chip size="small" color="primary" icon={<LabelIcon/>}
-                              label={tag.name} className={classes.chip}/>
 
-                    ))}
+                    <Typography variant="h5">
+                      Tags
+                    </Typography>
+
+                    <div>
+                      {this.props.tags.splice(0, 5).map(tag => (
+                          <Chip size="small" color="primary" icon={<LabelIcon/>}
+                                label={tag.name} className={classes.chip}/>
+
+                      ))}
+                    </div>
 
 
                   </Grid>
 
                 </Grid>
+
+                <Typography variant="h4">
+                  Description
+
+                </Typography>
+
+                <Divider/>
+
+                <Typography variant="h6">
+                  <div dangerouslySetInnerHTML={createMarkup(
+                      this.props.game.description)}/>
+
+                </Typography>
+                <Divider/>
+
 
                 <Video key={this.props.videoUrl} autoPlay loop muted
                        controls={['PlayPause', 'Seek', 'Time', 'Volume',
@@ -119,24 +149,15 @@ class GameDetails extends React.Component {
                          // Do stuff
                        }}>
                   <source src={this.props.videoUrl} type="video/webm"/>
-                  <track label="English" kind="subtitles" srcLang="en"
-                         src="http://source.vtt" default/>
+
                 </Video>
               </CardContent>
             </Card>
 
 
-            <Typography variant="h4">
-              Description
 
-            </Typography>
 
-            <Divider/>
-            <Typography variant="h6">
-              <div dangerouslySetInnerHTML={createMarkup(
-                  this.props.game.description)}/>
 
-            </Typography>
 
 
           </Paper>

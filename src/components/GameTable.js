@@ -20,7 +20,7 @@ const useStyles = ({
 
   },
   table: {
-    minWidth: 650,
+    minWidth: 300,
     fontSize: 20
   },
   th: {
@@ -33,6 +33,8 @@ const useStyles = ({
     width: 60,
     height: 40,
     marginRight: 20,
+    borderRadius: 5
+
   }
 });
 
@@ -62,9 +64,7 @@ class SimpleTable extends React.Component {
                   <div className={classes.th}>Name</div>
                 </TableCell>
 
-                <TableCell align="right">
-                  <div className={classes.th}>ID</div>
-                </TableCell>
+
 
                 <TableCell align="right">
                   <div className={classes.th}>Release Date</div>
@@ -84,9 +84,6 @@ class SimpleTable extends React.Component {
                                                             onClick={() => this.props.getDetails(
                                                                 game.id)}>{game.name}</Link>
                       </div>
-                    </TableCell>
-                    <TableCell align="right">
-                      <div className={classes.tr}>{game.id}</div>
                     </TableCell>
 
                     <TableCell align="right">
