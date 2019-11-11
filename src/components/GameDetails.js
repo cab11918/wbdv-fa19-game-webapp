@@ -10,7 +10,11 @@ import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import CardMedia from '@material-ui/core/CardMedia';
+
 import Chip from '@material-ui/core/Chip';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import LabelIcon from '@material-ui/icons/Label';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -19,6 +23,10 @@ import {DefaultPlayer as Video} from 'react-html5video';
 import 'react-html5video/dist/styles.css';
 import Grid from "@material-ui/core/Grid";
 import GameTable from "./GameTable";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import Container from "@material-ui/core/Container";
 
 const useStyles = (theme => ({
 
@@ -34,22 +42,48 @@ const useStyles = (theme => ({
     color: theme.palette.text.secondary,
   },
   img: {
-    width: 300,
-    marginBottom: '5px',
+    display: 'flex',
+    width: "100%",
+    alignItems: 'center',
+
     borderRadius: 5
   },
 
   card: {
     marginBottom: '5px',
-    marginTop: '5px'
+    marginTop: '5px',
+    marginLeft: '5px',
+    marginRight: '5px',
+
   },
   chip: {
-    fontSize: 10,
+
     marginBottom: '1px',
     marginTop: '1px',
     marginLeft: '1px',
-    marginRight: '1px'
-  }
+    marginRight: '1px',
+  },
+  div: {
+    marginTop: '5px',
+    marginBottom: '5px',
+  },
+  iconButton: {
+    padding: 10,
+
+  },
+  review: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+    fontSize: 15,
+
+  },
 
 }));
 
@@ -70,14 +104,9 @@ class GameDetails extends React.Component {
 
     return (
         <div className={classes.root}>
-          <Typography variant="h1">
-            Details
-          </Typography>
+
 
           <Paper className={classes.paper}>
-
-
-
 
 
             <Card className={classes.card}>
@@ -89,33 +118,46 @@ class GameDetails extends React.Component {
                   {this.props.game.name}
 
                 </Typography>
+                <Divider className={classes.div}/>
+
 
                 <Grid
                     container
                     direction="row"
 
                 >
+                  <Card className={classes.card}>
 
+                    <Video key={this.props.videoUrl} autoPlay loop muted
+                           controls={['PlayPause', 'Seek', 'Time', 'Volume',
+                             'Fullscreen']}
+                           poster={this.props.game.background_image}
+                           onCanPlayThrough={() => {
+                             // Do stuff
+                           }}>
+                      <source src={this.props.videoUrl} type="video/webm"/>
+
+                    </Video>
+
+
+                  </Card>
                   <Grid item xs={6}>
 
-                    <div>
-                      <img  src={this.props.game.background_image}
+                    <Card className={classes.card}>
+
+                      <img src={this.props.game.background_image}
                            className={classes.img}/>
 
-                    </div>
-
+                    </Card>
 
                   </Grid>
 
                   <Grid item xs={6}>
 
-                    <Typography variant="h5">
-                      Tags
-                    </Typography>
 
-                    <div>
+                    <div className={classes.card}>
                       {this.props.tags.splice(0, 5).map(tag => (
-                          <Chip size="small" color="primary" icon={<LabelIcon/>}
+                          <Chip size="small" icon={<LabelIcon/>}
                                 label={tag.name} className={classes.chip}/>
 
                       ))}
@@ -131,33 +173,41 @@ class GameDetails extends React.Component {
 
                 </Typography>
 
-                <Divider/>
+                <Divider className={classes.div}/>
 
                 <Typography variant="h6">
                   <div dangerouslySetInnerHTML={createMarkup(
                       this.props.game.description)}/>
 
                 </Typography>
-                <Divider/>
+
+                <Typography variant="h4">
+                  Reviews
+
+                </Typography>
+
+                <Divider className={classes.div}/>
 
 
-                <Video key={this.props.videoUrl} autoPlay loop muted
-                       controls={['PlayPause', 'Seek', 'Time', 'Volume',
-                         'Fullscreen']}
-                       poster={this.props.game.background_image}
-                       onCanPlayThrough={() => {
-                         // Do stuff
-                       }}>
-                  <source src={this.props.videoUrl} type="video/webm"/>
+                <Paper className={classes.review}>
 
-                </Video>
+                  <InputBase
+                      className={classes.input}
+                      placeholder="Write review"
+                      inputProps={{'aria-label': 'Write review'}}
+
+                  />
+                  <IconButton className={classes.iconButton} aria-label="review"
+
+                  >
+                    <RateReviewIcon/>
+                  </IconButton>
+
+                </Paper>
+
+
               </CardContent>
             </Card>
-
-
-
-
-
 
 
           </Paper>

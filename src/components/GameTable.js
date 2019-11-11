@@ -24,10 +24,10 @@ const useStyles = ({
     fontSize: 20
   },
   th: {
-    fontSize: 20
+    fontSize: 15
   },
   tr: {
-    fontSize: 15
+    fontSize: 13
   },
   img: {
     width: 60,
@@ -52,9 +52,7 @@ class SimpleTable extends React.Component {
 
         <div className={classes.root}>
 
-        <Typography variant="h1">
-          Games
-        </Typography>
+
         <Paper className={classes.root} m="auto">
 
           <Table className={classes.table} aria-label="simple table">

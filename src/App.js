@@ -4,6 +4,8 @@ import GamePlatform from './containers/GamePlatform';
 import {createStore} from "redux";
 import {Provider} from "react-redux"
 import DataTableReducer from './reducers/DataTableReducer'
+import ReactDOM from 'react-dom';
+
 import {
   BrowserRouter as Router,
   Link,
