@@ -8,9 +8,18 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SteamLogo from '../images/Steam_icon_logo.svg';
 import grey from '@material-ui/core/colors/grey';
-import {BrowserRouter as Router, Link} from "react-router-dom";
 import {withStyles} from "@material-ui/core/styles";
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom'
+import SearchingPage from "../containers/SearchingPage";
+import LandingPage from "../containers/LandingPage";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = theme => ({
   root: {
@@ -35,6 +44,11 @@ const useStyles = theme => ({
     marginRight: theme.spacing(1),
 
   },
+  button:{
+    fontSize:15,
+    backgroundColor:grey[600]
+
+  }
 
 });
 
@@ -58,17 +72,19 @@ class NavBar extends React.Component {
                 <Typography variant="h4" className={classes.title}>
                   myGame
                 </Typography>
-                <Link to={'/searching'}>
-                  <Button variant="contained" className={classes.searching}>
-                    <Typography variant="h5" className={classes.title}>
-                      Search
-                    </Typography></Button>
+                <Link to={'/'}>
+                  <Button className={classes.button} variant="contained"
+                          color="primary">
+                    log out
+                  </Button>
                 </Link>
 
 
               </Toolbar>
             </AppBar>
           </div>
+
+
         </div>
 
     )

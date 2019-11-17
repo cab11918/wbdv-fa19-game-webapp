@@ -9,10 +9,15 @@ import {
   Redirect
 } from 'react-router-dom'
 import NavBar from "../components/NavBar";
+import FunctionPanel from "../components/FunctionPanel";
+
 import GameTable from '../components/GameTable'
 import {Typography} from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import LoginBox from "../components/LoginBox";
 
-class GamePlatform extends React.Component {
+class LandingPage extends React.Component {
 
   constructor(props) {
 
@@ -20,20 +25,17 @@ class GamePlatform extends React.Component {
 
   }
 
-
   render() {
     return (
-        <Router>
-
-          <div>
 
 
-            <NavBar/>
-            <SearchingPage/>
+<div>
+
+  <NavBar/>
+  <FunctionPanel/>
+</div>
 
 
-          </div>
-        </Router>
 
     )
 
@@ -41,4 +43,4 @@ class GamePlatform extends React.Component {
 
 }
 
-export default GamePlatform
+export default LandingPage

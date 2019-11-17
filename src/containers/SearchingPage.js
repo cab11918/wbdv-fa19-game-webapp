@@ -4,6 +4,14 @@ import SearchBar from "../components/SearchBar";
 import GameTable from "../components/GameTable";
 import GameDetails from "../components/GameDetails";
 import Grid from '@material-ui/core/Grid';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom'
+import NavBar from "../components/NavBar";
 
 class SearchingPage extends React.Component {
 
@@ -71,8 +79,10 @@ class SearchingPage extends React.Component {
   render() {
 
     return (
+
         <div>
 
+<NavBar/>
           <SearchBar action={this.handler}/>
 
 
@@ -105,6 +115,10 @@ class SearchingPage extends React.Component {
 
 
         </div>
+
+
+
+
     )
 
   }
