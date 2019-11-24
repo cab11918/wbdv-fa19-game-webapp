@@ -12,8 +12,11 @@ import {
   Redirect
 } from 'react-router-dom'
 import NavBar from "../components/NavBar";
+import DetailPage from "./DetailPage";
+import GameService from '../services/GameService'
 
 class SearchingPage extends React.Component {
+  service = GameService.getInstance()
 
   constructor(props) {
 
@@ -32,8 +35,7 @@ class SearchingPage extends React.Component {
   }
 
   handler(search) {
-    fetch("https://api.rawg.io/api/games?search=" + search)
-    .then(response => response.json())
+    this.service.getSearchResults(search)
     .then(response => {
           this.setState({
 
@@ -45,9 +47,8 @@ class SearchingPage extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://api.rawg.io/api/games?page_size=20")
-    .then(response => response.json())
-    .then(response => {
+
+    this.service.getFeaturedGames(20).then(response => {
           this.setState({
 
             results: response.results
@@ -61,7 +62,7 @@ class SearchingPage extends React.Component {
     fetch("https://api.rawg.io/api/games/" + gameId)
     .then(response => response.json())
     .then(response =>
-        response.clip === null  ? this.setState({
+        response.clip === null ? this.setState({
               game: response,
               videoUrl: "",
               tags: response.tags
@@ -82,7 +83,7 @@ class SearchingPage extends React.Component {
 
         <div>
 
-<NavBar/>
+          <NavBar/>
           <SearchBar action={this.handler}/>
 
 
@@ -90,10 +91,10 @@ class SearchingPage extends React.Component {
               container
               direction="row"
               justify="center"
-              alignItems="flex-start"
+
           >
 
-            <Grid item xs={6}>
+            <Grid item xs={8}>
 
               <GameTable results={this.state.results}
                          getDetails={this.getDetails}/>
@@ -101,23 +102,20 @@ class SearchingPage extends React.Component {
 
             </Grid>
 
-            <Grid item xs={6}>
+            {/*<Grid item xs={6}>*/}
 
 
-              <GameDetails game={this.state.game}
-                           videoUrl={this.state.videoUrl}
-                           tags={this.state.tags}/>
+            {/*  <GameDetails game={this.state.game}*/}
+            {/*               videoUrl={this.state.videoUrl}*/}
+            {/*               tags={this.state.tags}/>*/}
 
 
-            </Grid>
+            {/*</Grid>*/}
 
           </Grid>
 
 
         </div>
-
-
-
 
     )
 

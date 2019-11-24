@@ -9,15 +9,12 @@ import {
   Redirect
 } from 'react-router-dom'
 import NavBar from "../components/NavBar";
-import FunctionPanel from "../components/FunctionPanel";
-
 import GameTable from '../components/GameTable'
 import {Typography} from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import LandingPage from "./LandingPage";
 import LoginBox from "../components/LoginBox";
 
-class LandingPage extends React.Component {
+class ProfilePage extends React.Component {
 
   constructor(props) {
 
@@ -30,8 +27,8 @@ class LandingPage extends React.Component {
 
         <div>
 
-          <NavBar/>
-          <FunctionPanel/>
+Profile page here
+
         </div>
 
     )
@@ -40,4 +37,4 @@ class LandingPage extends React.Component {
 
 }
 
-export default LandingPage
+export default ProfilePage

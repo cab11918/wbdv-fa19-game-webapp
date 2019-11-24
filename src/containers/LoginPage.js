@@ -30,8 +30,6 @@ class LoginPage extends React.Component {
           <LoginBox/>
 
 
-
-
         </div>
 
     )

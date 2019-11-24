@@ -4,7 +4,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import SteamLogo from '../images/Steam_icon_logo.svg';
 import grey from '@material-ui/core/colors/grey';
@@ -17,6 +19,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import DirectionsIcon from '@material-ui/icons/Directions'
 import Divider from '@material-ui/core/Divider'
 import withStyles from "@material-ui/core/styles/withStyles";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = (theme => ({
 
@@ -27,7 +31,8 @@ const useStyles = (theme => ({
     display: 'flex',
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    width: '400px'
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -39,6 +44,12 @@ const useStyles = (theme => ({
     padding: 10,
 
   },
+  fab: {
+    backgroundColor: grey[600]
+  },
+  backicon: {
+    fontSize: 25
+  }
 
 }));
 
@@ -51,6 +62,14 @@ class SearchBar extends React.Component {
 
   }
 
+  enterPressed(event) {
+    let code = event.keyCode || event.which;
+    if (code === 13) {
+
+      this.props.action(this.state.search)
+    }
+  }
+
   render() {
     const {classes} = this.props;
 
@@ -60,24 +79,46 @@ class SearchBar extends React.Component {
 
 
           <Container maxWidth="sm" className={classes.container}>
-            <Paper className={classes.root}>
 
-              <InputBase
-                  className={classes.input}
-                  placeholder="Search game"
-                  inputProps={{'aria-label': 'Search game'}}
-                  onChange={(event) => this.setState({
-                    search: event.target.value
-                  })}
-              />
-              <IconButton className={classes.iconButton} aria-label="search"
-                          onClick={(
-                              event => this.props.action(this.state.search))}
-              >
-                <SearchIcon/>
-              </IconButton>
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+            >
 
-            </Paper>
+              <Link to={'/landing'}>
+                <Fab className={classes.fab} color="primary" aria-label="add">
+                  <ArrowBackIcon className={classes.backicon}/>
+                </Fab>
+
+              </Link>
+
+
+              <Paper className={classes.root}>
+
+
+                <InputBase
+                    className={classes.input}
+                    placeholder="Search game"
+                    inputProps={{'aria-label': 'Search game'}}
+                    onChange={(event) => this.setState({
+                      search: event.target.value
+                    })}
+                    onKeyPress={this.enterPressed.bind(this)}
+                />
+                <IconButton className={classes.iconButton} aria-label="search"
+                            onClick={(
+                                event => this.props.action(this.state.search))}
+
+
+                >
+                  <SearchIcon/>
+                </IconButton>
+
+              </Paper>
+            </Grid>
+
           </Container>
         </React.Fragment>
     )

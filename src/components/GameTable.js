@@ -5,7 +5,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Link from '@material-ui/core/Link';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom'
 import Paper from '@material-ui/core/Paper';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -77,9 +83,13 @@ class SimpleTable extends React.Component {
                       <TableCell component="th" scope="row">
                         <div className={classes.tr}>
                           <img src={game.background_image}
-                               className={classes.img}/><Link href="#"
-                                                              onClick={() => this.props.getDetails(
-                                                                  game.id)}>{game.name}</Link>
+                               className={classes.img}/>
+
+                              <Link to={`/detail/${game.id}`}>
+                                <a
+                                   onClick={() => this.props.getDetails(
+                                       game.id)}>{game.name}</a>
+                              </Link>
                         </div>
                       </TableCell>
 

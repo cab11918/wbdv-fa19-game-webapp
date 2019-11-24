@@ -62,6 +62,9 @@ const useStyles = theme => ({
     fontSize: 15,
     backgroundColor: grey[600]
   },
+  grid:{
+    minHeight: '100vh'
+  }
 
 });
 
@@ -84,9 +87,7 @@ class LoginBox extends React.Component {
               direction="column"
               alignItems="center"
               justify="center"
-              style={{
-                minHeight: '100vh'
-              }}
+              className={classes.grid}
           >
 
             <Grid item xs={3}>

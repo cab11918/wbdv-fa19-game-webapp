@@ -5,7 +5,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Link from '@material-ui/core/Link';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom'
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -26,7 +32,11 @@ import GameTable from "./GameTable";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Container from "@material-ui/core/Container";
+import Fab from "@material-ui/core/Fab";
+import GameService from '../services/GameService'
+import grey from "@material-ui/core/colors/grey";
 
 const useStyles = (theme => ({
 
@@ -51,17 +61,19 @@ const useStyles = (theme => ({
 
   card: {
     marginBottom: '5px',
-    marginTop: '5px',
+    marginTop: '20px',
     marginLeft: '5px',
     marginRight: '5px',
 
   },
   chip: {
 
-    marginBottom: '1px',
-    marginTop: '1px',
-    marginLeft: '1px',
-    marginRight: '1px',
+    fontSize: '15px',
+
+    marginBottom: '2px',
+    marginTop: '2px',
+    marginLeft: '2px',
+    marginRight: '2px',
   },
   div: {
     marginTop: '5px',
@@ -81,9 +93,15 @@ const useStyles = (theme => ({
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    fontSize: 15,
+    fontSize: 12,
 
   },
+  fab: {
+    backgroundColor: grey[600]
+  },
+  backIcon: {
+    fontSize: 25,
+  }
 
 }));
 
@@ -93,9 +111,36 @@ function createMarkup(data) {
 
 class GameDetails extends React.Component {
 
+  service = GameService.getInstance()
+
+  componentDidMount() {
+
+    this.service.getDetails(this.props.gameId).then(response =>
+        response.clip === null ? this.setState({
+              game: response,
+              videoUrl: "",
+              tags: response.tags
+            }) :
+
+            this.setState({
+              game: response,
+              videoUrl: response.clip.clip,
+              tags: response.tags
+
+            })
+    )
+
+  }
+
   constructor(props) {
 
     super(props);
+    this.state = {
+      results: [],
+      game: [],
+      videoUrl: "",
+      tags: []
+    }
 
   }
 
@@ -103,19 +148,30 @@ class GameDetails extends React.Component {
     const {classes} = this.props;
 
     return (
+
         <div className={classes.root}>
+
 
 
           <Paper className={classes.paper}>
 
+            <Link to={'/searching'}>
+
+              <Fab className={classes.fab}  color="primary" aria-label="add"
+              >
+                <ArrowBackIcon className={classes.backIcon} />
+              </Fab>
+
+            </Link>
 
             <Card className={classes.card}>
+
 
               <CardContent>
 
 
                 <Typography variant="h3">
-                  {this.props.game.name}
+                  {this.state.game.name}
 
                 </Typography>
                 <Divider className={classes.div}/>
@@ -126,37 +182,23 @@ class GameDetails extends React.Component {
                     direction="row"
 
                 >
-                  <Card className={classes.card}>
 
-                    <Video key={this.props.videoUrl} autoPlay loop muted
-                           controls={['PlayPause', 'Seek', 'Time', 'Volume',
-                             'Fullscreen']}
-                           poster={this.props.game.background_image}
-                           onCanPlayThrough={() => {
-                             // Do stuff
-                           }}>
-                      <source src={this.props.videoUrl} type="video/webm"/>
-
-                    </Video>
-
-
-                  </Card>
-                  <Grid item xs={6}>
+                  <Grid item xs={8}>
 
                     <Card className={classes.card}>
 
-                      <img src={this.props.game.background_image}
+                      <img src={this.state.game.background_image}
                            className={classes.img}/>
 
                     </Card>
 
                   </Grid>
 
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
 
 
                     <div className={classes.card}>
-                      {this.props.tags.splice(0, 5).map(tag => (
+                      {this.state.tags.map(tag => (
                           <Chip size="small" icon={<LabelIcon/>}
                                 label={tag.name} className={classes.chip}/>
 
@@ -168,18 +210,34 @@ class GameDetails extends React.Component {
 
                 </Grid>
 
-                <Typography variant="h4">
+                <Typography variant="h3">
                   Description
 
                 </Typography>
 
                 <Divider className={classes.div}/>
 
-                <Typography variant="h6">
+                <Typography variant="h5">
                   <div dangerouslySetInnerHTML={createMarkup(
-                      this.props.game.description)}/>
+                      this.state.game.description)}/>
 
                 </Typography>
+
+                <Card className={classes.card}>
+
+                  <Video key={this.state.videoUrl} autoPlay loop muted
+                         controls={['PlayPause', 'Seek', 'Time', 'Volume',
+                           'Fullscreen']}
+                         poster={this.state.game.background_image}
+                         onCanPlayThrough={() => {
+                           // Do stuff
+                         }}>
+                    <source src={this.state.videoUrl} type="video/webm"/>
+
+                  </Video>
+
+
+                </Card>
 
                 <Typography variant="h4">
                   Reviews

@@ -15,7 +15,9 @@ import {
 } from 'react-router-dom'
 import SearchingPage from "./containers/SearchingPage";
 import LoginPage from "./containers/LoginPage";
-
+import DetailPage from "./containers/DetailPage";
+import GameDetails from "./components/GameDetails";
+import ProfilePage from "./containers/ProfilePage";
 
 const store = createStore(DataTableReducer)
 
@@ -26,18 +28,18 @@ function App() {
         <Provider store={store}>
 
 
-        <Switch>
-          <LoginPage exact path='/' />
-          <LandingPage exact path='/landing'/>
-          <SearchingPage exact path='/searching'/>
+          <Switch>
+            <Route exact path={"/"} component={LoginPage}></Route>
+            <Route path={"/searching"} component={SearchingPage}></Route>
+            <Route path={"/landing"} component={LandingPage}></Route>
+            <Route path={"/detail/:gameId"} component={DetailPage}></Route>
+            <Route path={"/profile"} component={ProfilePage}></Route>
 
-        </Switch>
+          </Switch>
 
 
-  </Provider>
+        </Provider>
       </Router>
-
-
 
   );
 }
