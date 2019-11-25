@@ -1,33 +1,18 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import SearchBG from '../images/searchbg.png';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import SteamLogo from '../images/Steam_icon_logo.svg';
-import grey from '@material-ui/core/colors/grey';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {withStyles} from "@material-ui/core/styles";
-import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
-import {
-  BrowserRouter as Router,
-  Link,
-  Route,
-  Switch,
-  Redirect
-} from 'react-router-dom'
-import SearchingPage from "../containers/SearchingPage";
-import LandingPage from "../containers/LandingPage";
+import {Link} from 'react-router-dom'
 import Grid from "@material-ui/core/Grid";
-import Chip from "@material-ui/core/Chip";
-import LabelIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import Avatar from "@material-ui/core/Avatar";
+import {Typography} from "@material-ui/core";
+import GameService from "../services/GameService"
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import Grow from '@material-ui/core/Grow';
 
 const useStyles = theme => ({
   root: {
@@ -36,21 +21,67 @@ const useStyles = theme => ({
   },
 
   card: {
-    paddingTop: '150px',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    paddingTop: 20
 
   },
-  menutext: {
-    marginRight: theme.spacing(6),
-    marginLeft: theme.spacing(6),
+  button: {
+
+    fontSize: 20,
+    marginLeft: theme.spacing(2)
+
+  },
+  icon: {
+    width: 50,
+    height: 50,
+  },
+  bigAvatar: {
+    width: 100,
+    height: 100,
+  },
+  mainGrid: {
+    marginLeft: theme.spacing(2)
+
+  },
+  helloWord: {
+    paddingTop: 20,
+    marginLeft: theme.spacing(2)
+
+  },
+  img: {
+    width: 120,
+    height: 80,
+    borderRadius: 10,
+    marginRight: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
+
   }
 
 });
 
 class FunctionPanel extends React.Component {
+
+  service = GameService.getInstance()
+
   constructor(props) {
     super(props)
+
+    this.state = {
+      results: []
+    }
+
+  }
+
+  componentDidMount() {
+
+    this.service.getFeaturedGames(40).then(response => {
+          this.setState({
+
+            results: response.results
+
+          })
+        }
+    )
   }
 
   render() {
@@ -63,62 +94,88 @@ class FunctionPanel extends React.Component {
           <Grid
               container
               direction="row"
-              justify="center"
-              alignItems="center"
+              justify="flex-start"
+              alignItems="flex-start"
+              className={classes.mainGrid}
           >
 
-            <Grid item xs={2} className={classes.card}>
+            <Grid
+                container
+                direction="row"
 
-              <Card>
+
+                className={classes.card}>
+
+              <Avatar alt="Bill Gates"
+                      src="http://www.gstatic.com/tv/thumb/persons/614/614_v9_bc.jpg"
+                      className={classes.bigAvatar}/>
+
+              <Typography variant={"h1"} className={classes.helloWord}>
+                Welcome, Bill Gates!
+              </Typography>
+
+
+              <Grid
+                  container
+                  direction="row"
+
+
+                  className={classes.card}>
+
+
                 <Link to="/searching">
-                  <CardActionArea>
-                    <CardMedia
-                        component="img"
-                        height="300"
-
-                        image='https://skolmarketing.com/wp-content/uploads/2017/12/seo-blog-2-1.png'
-                    />
-
-                    <CardContent>
-                      <Typography gutterBottom variant="h2" component="h2"
-                                  className={classes.menutext}>
-                        Search
-                      </Typography>
-
-                    </CardContent>
-                  </CardActionArea>
+                  <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      startIcon={<SearchIcon className={classes.icon}/>}
+                  >
+                    Search
+                  </Button>
                 </Link>
 
+                <Link to="/profile">
+                  <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                      startIcon={<AccountBoxIcon className={classes.icon}/>}
+                  >
+                    Profile
+                  </Button>
+                </Link>
 
-              </Card>
+              </Grid>
+
+
+              <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  className={classes.card}
+
+              >
+
+                {
+                  this.state.results.map((game, index) => (
+                      <Grow in={true}
+                            style={{transformOrigin: '0 0 0'}}
+                            {...({timeout: 1000 + index * 100})}>
+                        <img src={game.background_image}
+                             className={classes.img}/>
+                      </Grow>
+                  ))
+                }
+              </Grid>
 
 
             </Grid>
 
-            <Grid item xs={2} className={classes.card}>
-
-              <Card>
-                <Link to="/profile">
-                  <CardActionArea>
-                    <CardMedia
-                        component="img"
-                        height="300"
-
-                        image='https://maxcdn.icons8.com/app/uploads/2018/12/UI-design-popular-trends-1200x900.png'
-
-                    />
-
-                    <CardContent>
-                      <Typography gutterBottom variant="h2" component="h2"
-                                  className={classes.menutext}>
-                        Profile
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Link>
+            <Grid
 
 
-              </Card>
+                item xs={3} className={classes.card}>
 
 
             </Grid>

@@ -19,21 +19,16 @@ import Divider from '@material-ui/core/Divider';
 import CardMedia from '@material-ui/core/CardMedia';
 
 import Chip from '@material-ui/core/Chip';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import RateReviewIcon from '@material-ui/icons/RateReview';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import LabelIcon from '@material-ui/icons/Label';
 import withStyles from "@material-ui/core/styles/withStyles";
 import {Typography} from "@material-ui/core";
 import {DefaultPlayer as Video} from 'react-html5video';
 import 'react-html5video/dist/styles.css';
 import Grid from "@material-ui/core/Grid";
-import GameTable from "./GameTable";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import Container from "@material-ui/core/Container";
 import Fab from "@material-ui/core/Fab";
 import GameService from '../services/GameService'
 import grey from "@material-ui/core/colors/grey";
@@ -41,6 +36,8 @@ import grey from "@material-ui/core/colors/grey";
 const useStyles = (theme => ({
 
   root: {
+    paddingTop: 20,
+    paddingBottom: 20,
     flexGrow: 1,
     width: '98%',
     overflowX: 'auto',
@@ -144,6 +141,8 @@ class GameDetails extends React.Component {
 
   }
 
+
+
   render() {
     const {classes} = this.props;
 
@@ -239,7 +238,7 @@ class GameDetails extends React.Component {
 
                 </Card>
 
-                <Typography variant="h4">
+                <Typography variant="h3">
                   Reviews
 
                 </Typography>

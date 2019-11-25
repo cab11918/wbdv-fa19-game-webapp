@@ -13,9 +13,9 @@ import GameTable from '../components/GameTable'
 import {Typography} from "@material-ui/core";
 import LandingPage from "./LandingPage";
 import LoginBox from "../components/LoginBox";
-import ProfileForm from "../components/ProfileForm";
+import RegisterForm from "../components/RegisterForm";
 
-class ProfilePage extends React.Component {
+class RegisterPage extends React.Component {
 
   constructor(props) {
 
@@ -27,8 +27,9 @@ class ProfilePage extends React.Component {
     return (
 
         <div>
-<NavBar/>
-<ProfileForm/>
+
+          <RegisterForm/>
+
 
         </div>
 
@@ -38,4 +39,4 @@ class ProfilePage extends React.Component {
 
 }
 
-export default ProfilePage
+export default RegisterPage

@@ -1,28 +1,19 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import {
-  BrowserRouter as Router,
-  Link,
-  Route,
-  Switch,
-  Redirect
-} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import Paper from '@material-ui/core/Paper';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import withStyles from "@material-ui/core/styles/withStyles";
-import {Typography} from "@material-ui/core";
 
 const useStyles = ({
   root: {
-    width: '98%',
     overflowX: 'auto',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    paddingBottom: 20
 
   },
   table: {
@@ -85,11 +76,11 @@ class SimpleTable extends React.Component {
                           <img src={game.background_image}
                                className={classes.img}/>
 
-                              <Link to={`/detail/${game.id}`}>
-                                <a
-                                   onClick={() => this.props.getDetails(
-                                       game.id)}>{game.name}</a>
-                              </Link>
+                          <Link to={`/detail/${game.id}`}>
+                            <a
+                                onClick={() => this.props.getDetails(
+                                    game.id)}>{game.name}</a>
+                          </Link>
                         </div>
                       </TableCell>
 
