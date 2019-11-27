@@ -30,8 +30,8 @@ class LandingPage extends React.Component {
 
         <div>
 
-          <NavBar/>
-          <FunctionPanel/>
+
+          <FunctionPanel userId={this.props.match.params.userId}/>
         </div>
 
     )

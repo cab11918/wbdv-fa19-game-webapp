@@ -9,13 +9,20 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import {Typography} from "@material-ui/core";
 import GameService from "../services/GameService"
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
+import UserService from "../services/UserService"
 import Grow from '@material-ui/core/Grow';
+import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
+import AppBar from "@material-ui/core/AppBar/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import grey from "@material-ui/core/colors/grey";
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 
 const useStyles = theme => ({
   root: {
+    flexGrow: 1,
+
+  },
+  title: {
     flexGrow: 1,
 
   },
@@ -27,7 +34,7 @@ const useStyles = theme => ({
   button: {
 
     fontSize: 20,
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
 
   },
   icon: {
@@ -35,8 +42,11 @@ const useStyles = theme => ({
     height: 50,
   },
   bigAvatar: {
-    width: 100,
-    height: 100,
+
+    width: 80,
+    height: 80,
+    fontSize: 40
+
   },
   mainGrid: {
     marginLeft: theme.spacing(2)
@@ -55,26 +65,47 @@ const useStyles = theme => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2)
 
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    marginRight: theme.spacing(1),
+
+  },
+  nav: {
+    backgroundColor: grey[800]
+  },
+  searching: {
+    marginRight: theme.spacing(1),
+
+  },
+  buttonLogin: {
+    fontSize: 15,
+    backgroundColor: grey[600],
+
   }
 
 });
 
 class FunctionPanel extends React.Component {
 
-  service = GameService.getInstance()
+  gameService = GameService.getInstance()
+  userService = UserService.getInstance()
 
   constructor(props) {
     super(props)
 
     this.state = {
-      results: []
+      results: [],
+      name: "Guest",
+      userLoginText: "LOG IN"
     }
 
   }
 
   componentDidMount() {
 
-    this.service.getFeaturedGames(40).then(response => {
+    this.gameService.getFeaturedGames(40).then(response => {
           this.setState({
 
             results: response.results
@@ -82,6 +113,18 @@ class FunctionPanel extends React.Component {
           })
         }
     )
+    if (typeof (this.props.userId) == 'undefined') {
+
+    } else {
+      this.userService.findUserById(this.props.userId).then(user => {
+        this.setState({
+          name: user.name,
+          userLoginText:"LOG OUT"
+
+        })
+      })
+    }
+
   }
 
   render() {
@@ -90,6 +133,31 @@ class FunctionPanel extends React.Component {
     return (
 
         <div>
+
+          <div>
+
+            <div className={classes.root}>
+              <AppBar className={classes.nav} position="static">
+                <Toolbar>
+
+                  <SportsEsportsIcon className={classes.logo}/>
+                  <Typography variant="h4" className={classes.title}>
+                    myGame
+                  </Typography>
+                  <Link to={'/login'}>
+                    <Button className={classes.buttonLogin} variant="contained"
+                            color="primary">
+                      {this.state.userLoginText}
+                    </Button>
+                  </Link>
+
+
+                </Toolbar>
+              </AppBar>
+            </div>
+
+
+          </div>
 
           <Grid
               container
@@ -106,12 +174,15 @@ class FunctionPanel extends React.Component {
 
                 className={classes.card}>
 
-              <Avatar alt="Bill Gates"
-                      src="http://www.gstatic.com/tv/thumb/persons/614/614_v9_bc.jpg"
-                      className={classes.bigAvatar}/>
+              <Avatar
+                  className={classes.bigAvatar}>{this.state.name.match(
+                  /\b\w/g)
+              }</Avatar>
 
               <Typography variant={"h1"} className={classes.helloWord}>
-                Welcome, Bill Gates!
+                {
+                  "Welcome," + this.state.name + "!"
+                }
               </Typography>
 
 
@@ -128,9 +199,9 @@ class FunctionPanel extends React.Component {
                       variant="contained"
                       color="primary"
                       className={classes.button}
-                      startIcon={<SearchIcon className={classes.icon}/>}
+                      startIcon={<VideogameAssetIcon className={classes.icon}/>}
                   >
-                    Search
+                    games
                   </Button>
                 </Link>
 
@@ -159,7 +230,7 @@ class FunctionPanel extends React.Component {
 
                 {
                   this.state.results.map((game, index) => (
-                      <Grow in={true}
+                      <Grow key={game.id} in={true}
                             style={{transformOrigin: '0 0 0'}}
                             {...({timeout: 1000 + index * 100})}>
                         <img src={game.background_image}

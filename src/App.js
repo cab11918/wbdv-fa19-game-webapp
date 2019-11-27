@@ -33,10 +33,10 @@ function App() {
             <Route path={"/login"} component={LoginPage}></Route>
             <Route path={"/searching"} component={SearchingPage}></Route>
             <Route exact path={"/"} component={LandingPage}></Route>
+            <Route exact path={"/user/:userId"} component={LandingPage}></Route>
             <Route path={"/detail/:gameId"} component={DetailPage}></Route>
             <Route path={"/profile"} component={ProfilePage}></Route>
             <Route path={"/register"} component={RegisterPage}></Route>
-
           </Switch>
 
 

@@ -35,18 +35,25 @@ import {Typography} from "@material-ui/core";
 import {DefaultPlayer as Video} from 'react-html5video';
 import 'react-html5video/dist/styles.css';
 import Grid from "@material-ui/core/Grid";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Fab from "@material-ui/core/Fab";
 import GameService from '../services/GameService'
+import UserService from '../services/UserService'
 import grey from "@material-ui/core/colors/grey";
 
 const useStyles = (theme => ({
 
   root: {
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 50,
+    paddingBottom: 50,
     flexGrow: 1,
     width: '98%',
     overflowX: 'auto',
@@ -75,7 +82,6 @@ const useStyles = (theme => ({
   nameTextField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: "60%",
   },
   inputRoot: {
     fontSize: 25,
@@ -99,31 +105,85 @@ const useStyles = (theme => ({
   },
   mainGrid: {
     paddingTop: 30,
-    paddingBottom: 20
+    paddingBottom: 30
   },
   button: {
     marginRight: theme.spacing(1),
     fontSize: 15,
     backgroundColor: grey[600],
 
-  }, grid: {}
+  }, grid: {},
+  alertBox: {
+    fontSize: 20
+  },
 
 }));
 
 class RegisterForm extends React.Component {
+  userService = UserService.getInstance()
 
   constructor(props) {
 
     super(props);
     this.state = {
-      results: [],
-      game: [],
-      videoUrl: "",
-      tags: [],
-      name: ""
+      name: "",
+      username: "",
+      password: "",
+      email: "",
+      dob: "",
+      gender: "select",
+      willAlert: false,
+      alertText: "",
+      reNavPath: "/register"
     }
 
   }
+
+  register() {
+    this.setState({
+      willAlert: true
+    })
+    if (this.state.name === "") {
+      this.setState({
+        alertText: "Please fill in the name",
+      })
+    } else if (this.state.username === "") {
+      this.setState({
+        alertText: "Please fill in the username",
+      })
+    } else if (this.state.password === "") {
+      this.setState({
+        alertText: "Please fill in the password",
+      })
+    } else if (this.state.email === "") {
+      this.setState({
+        alertText: "Please fill in the Email address",
+      })
+    } else if (this.state.dob === "") {
+      this.setState({
+        alertText: "Please fill in your birthday",
+      })
+    } else if (this.state.gender === "select") {
+      this.setState({
+        alertText: "Please select your gender",
+      })
+    } else {
+      this.setState({
+        alertText: "You have been successfully signed up ! :)",
+        reNavPath: "/login"
+      })
+      this.userService.createUser({
+        name: this.state.name,
+        birthday: this.state.dob,
+        email: this.state.email,
+        password: this.state.password,
+        username: this.state.username,
+        gender: this.state.gender
+      })
+    }
+
+  }
+
 
   render() {
     const {classes} = this.props;
@@ -136,17 +196,20 @@ class RegisterForm extends React.Component {
             alignItems="center"
             justify="center"
             className={classes.grid}
+
         >
 
 
           <Grid
-              item xs={6}
+              container
+              direction="row"
+              item xs={5}
           >
             <div className={classes.root}>
 
               <Paper className={classes.paper}>
 
-                <Link to={'/'}>
+                <Link to={'/login'}>
 
                   <Fab className={classes.fab} color="primary" aria-label="add"
                   >
@@ -158,6 +221,8 @@ class RegisterForm extends React.Component {
                 <Grid
                     container
                     direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
 
                     className={classes.mainGrid}
                 >
@@ -165,20 +230,65 @@ class RegisterForm extends React.Component {
                   <Grid
                       container
                       direction="row"
-                      justify="flex-start"
-                      alignItems="flex-start"
+                      justify="center"
+                      alignItems="center"
                   >
 
-                    <Avatar
-                        className={classes.bigAvatar}>{this.state.name.match(/\b\w/g)
-                    }</Avatar>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        item xs={10}
+                    >
+
+                      <Avatar
+                          className={classes.bigAvatar}>{this.state.name.match(
+                          /\b\w/g)
+                      }</Avatar>
+
+
+                      <TextField
+                          label="Name"
+                          className={classes.nameTextField}
+                          onChange={(event) => this.setState({
+                            name: event.target.value
+                          })}
+                          margin="normal"
+                          InputProps={{classes: {root: classes.inputRoot}}}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.labelRoot,
+                            }
+                          }}
+                      />
+
+                    </Grid>
 
 
                     <TextField
-                        label="Name"
-                        className={classes.nameTextField}
-                        onChange={(event)=>this.setState({
-                          name: event.target.value
+
+                        label="Username"
+                        className={classes.textField}
+                        margin="normal"
+                        onChange={(event) => this.setState({
+                          username: event.target.value
+                        })}
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                    />
+
+                    <TextField
+
+                        label="Password"
+                        type="password"
+                        className={classes.textField}
+                        onChange={(event) => this.setState({
+                          password: event.target.value
                         })}
                         margin="normal"
                         InputProps={{classes: {root: classes.inputRoot}}}
@@ -189,99 +299,130 @@ class RegisterForm extends React.Component {
                         }}
                     />
 
+                    <TextField
+                        label="Email"
+                        type="email"
+                        onChange={(event) => this.setState({
+                          email: event.target.value
+                        })}
+                        className={classes.textField}
+                        margin="normal"
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                    />
+
+                    <TextField
+                        id="standard-disabled"
+                        label="Date of Birth"
+                        type="date"
+                        defaultValue="0001-01-01"
+                        className={classes.textField}
+                        margin="normal"
+                        onChange={(event) => this.setState({
+                          dob: event.target.value
+                        })}
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                    />
+
+                    <Grid container
+                          direction={'row'}
+                          justify={'flex-start'}
+                          alignItems={'flex-start'}
+                          item xs={10}>
+
+
+                      <FormControl
+                          className={classes.formControl}>
+                        <InputLabel
+                            className={classes.labelRoot}>Gender</InputLabel>
+                        <Select
+                            className={classes.inputRoot}
+                            value={this.state.gender}
+
+                            onChange={(event) => this.setState({
+                              gender: event.target.value
+                            })
+                            }>
+                          <MenuItem value={"select"}>Select</MenuItem>
+                          <MenuItem value={"male"}>Male</MenuItem>
+                          <MenuItem value={"female"}>Female</MenuItem>
+                          <MenuItem value={"other"}>Other</MenuItem>
+
+                        </Select>
+                      </FormControl>
+
+                    </Grid>
+
 
                   </Grid>
 
-                  <TextField
+                </Grid>
 
-                      label="Username"
-                      className={classes.textField}
-                      margin="normal"
-                      InputProps={{classes: {root: classes.inputRoot}}}
-                      InputLabelProps={{
-                        classes: {
-                          root: classes.labelRoot,
-                        }
-                      }}
-                  />
+                <Grid container
+                      direction={'row'}
+                      justify={'flex-end'}
+                      alignItems={'center'}>
 
-                  <TextField
+                  <Button
+                      variant="contained" color="primary"
+                      className={classes.button}
+                      onClick={() => this.register()
+                      }>
+                    Create Account
+                  </Button>
 
-                      label="Password"
-                      type="password"
-                      className={classes.textField}
-                      margin="normal"
-                      InputProps={{classes: {root: classes.inputRoot}}}
-                      InputLabelProps={{
-                        classes: {
-                          root: classes.labelRoot,
-                        }
-                      }}
-                  />
-
-                  <TextField
-                      label="Email"
-                      type="email"
-                      className={classes.textField}
-                      margin="normal"
-                      InputProps={{classes: {root: classes.inputRoot}}}
-                      InputLabelProps={{
-                        classes: {
-                          root: classes.labelRoot,
-                        }
-                      }}
-                  />
-
-                  <TextField
-                      id="standard-disabled"
-                      label="Date of Birth"
-                      type="date"
-                      defaultValue="2019-01-01"
-                      className={classes.textField}
-                      margin="normal"
-                      InputProps={{classes: {root: classes.inputRoot}}}
-                      InputLabelProps={{
-                        classes: {
-                          root: classes.labelRoot,
-                        }
-                      }}
-                  />
-
-                  <Grid
-                      item xs={12}
-                  >
-
-                    <FormControl
-                        className={classes.formControl}>
-                      <InputLabel
-                          className={classes.labelRoot}>Gender</InputLabel>
-                      <Select
-                          className={classes.inputRoot}
-                          value={10}>
-                        <MenuItem value={10}>Male</MenuItem>
-                        <MenuItem value={20}>Female</MenuItem>
-
-                      </Select>
-                    </FormControl>
-
-                  </Grid>
 
 
                 </Grid>
-                <Button variant="contained" color="primary"
-                        className={classes.button}>
-                  Create Account
-                </Button>
 
 
               </Paper>
             </div>
           </Grid>
 
+          <Dialog className={classes.alertBox}
+                  open={this.state.willAlert}
+              // onClose={handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+          >
 
+            <DialogContent>
+              <DialogContentText className={classes.alertBox}
+                                 id="alert-dialog-description">
+                {this.state.alertText}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Link to={this.state.reNavPath}>
+
+
+                <Button
+                    onClick={() =>
+                        this.setState({
+                          willAlert: false
+                        })
+                    }
+
+                    color="primary" autoFocus className={classes.alertBox}>
+                  OK
+                </Button>
+
+              </Link>
+            </DialogActions>
+          </Dialog>
         </Grid>
 
-    );
+    )
   }
 
 }

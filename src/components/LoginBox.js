@@ -13,6 +13,8 @@ import grey from '@material-ui/core/colors/grey';
 import {withStyles} from "@material-ui/core/styles";
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import {Link} from 'react-router-dom'
+import UserService from '../services/UserService';
+import {promised} from "q";
 
 const useStyles = theme => ({
   root: {
@@ -55,8 +57,44 @@ const useStyles = theme => ({
 });
 
 class LoginBox extends React.Component {
+  service = UserService.getInstance()
+
   constructor(props) {
     super(props)
+    this.state = {
+      username: "",
+      password: "",
+      reNavPath: "/login",
+      userList: []
+    }
+
+  }
+
+  componentDidMount() {
+    this.service.findAllUsers().then(userlist => {
+      this.setState(
+          {
+            userList: userlist
+          }
+      )
+    })
+  }
+
+  userLogin(username, password) {
+
+    for (let i = 0; i < this.state.userList.length; i++) {
+
+      if (username === this.state.userList[i].username) {
+
+        if (password === this.state.userList[i].password) {
+          this.setState({
+            reNavPath: "/user/" + this.state.userList[i].id
+          })
+          break
+
+        }
+      }
+    }
   }
 
   render() {
@@ -101,6 +139,9 @@ class LoginBox extends React.Component {
                             focused: classes.labelFocused
                           }
                         }}
+                        onChange={(event) => this.setState({
+                          username: event.target.value
+                        })}
                         className={classes.textField}
                         margin="normal"
                         variant='outlined'
@@ -120,6 +161,12 @@ class LoginBox extends React.Component {
                         autoComplete="current-password"
                         margin="normal"
                         variant='outlined'
+                        onChange={
+
+                          (event) => this.setState({
+                            password: event.target.value
+
+                          })}
 
                     />
 
@@ -138,14 +185,20 @@ class LoginBox extends React.Component {
 
 
                       <Grid container justify="flex-end" direction="row">
+                        <Button className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                  this.userLogin(this.state.username,
+                                      this.state.password)
 
-                        <Link to={'/'}>
-                          <Button className={classes.button}
-                                  variant="contained"
-                                  color="primary">
-                            log in
-                          </Button>
-                        </Link>
+                                }}
+                                href={this.state.reNavPath}
+                        >
+                          log in
+                        </Button>
+
+
                       </Grid>
 
 

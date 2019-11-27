@@ -62,12 +62,6 @@ class NavBar extends React.Component {
                 <Typography variant="h4" className={classes.title}>
                   myGame
                 </Typography>
-                <Link to={'/login'}>
-                  <Button className={classes.button} variant="contained"
-                          color="primary">
-                    log out
-                  </Button>
-                </Link>
 
 
               </Toolbar>
