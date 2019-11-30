@@ -50,7 +50,7 @@ const useStyles = theme => ({
 
   },
   mainGrid: {
-    marginLeft: theme.spacing(5)
+    marginLeft: theme.spacing(2)
 
   },
   helloWord: {
@@ -62,10 +62,9 @@ const useStyles = theme => ({
     width: 120,
     height: 80,
     borderRadius: 10,
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginRight: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
 
   },
   logo: {
