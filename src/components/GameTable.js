@@ -40,6 +40,22 @@ class SimpleTable extends React.Component {
 
     super(props);
 
+    this.state = {
+      userId: ""
+    }
+
+  }
+
+  componentDidMount() {
+
+    if (typeof (this.props.userId) == 'undefined') {
+
+    } else {
+      this.setState({
+        userId: "/user/" + this.props.userId
+
+      })
+    }
   }
 
   render() {
@@ -69,29 +85,31 @@ class SimpleTable extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.props.results.map(game => (
-                    <TableRow key={game.id}>
-                      <TableCell component="th" scope="row">
-                        <div className={classes.tr}>
-                          <img src={game.background_image}
-                               className={classes.img}/>
+                {
 
-                          <Link to={`/detail/${game.id}`}>
-                            <a
-                                onClick={() => this.props.getDetails(
-                                    game.id)}>{game.name}</a>
-                          </Link>
-                        </div>
-                      </TableCell>
+                  this.props.results.map(game => (
+                      <TableRow key={game.id}>
+                        <TableCell component="th" scope="row">
+                          <div className={classes.tr}>
+                            <img src={game.background_image}
+                                 className={classes.img}/>
 
-                      <TableCell align="right">
-                        <div className={classes.tr}>{game.released}</div>
-                      </TableCell>
-                      <TableCell align="right">
-                        <div className={classes.tr}>{game.rating}</div>
-                      </TableCell>
-                    </TableRow>
-                ))}
+                            <Link to={this.state.userId+`/detail/${game.id}` }>
+                              <a
+                                  onClick={() => this.props.getDetails(
+                                      game.id)}>{game.name}</a>
+                            </Link>
+                          </div>
+                        </TableCell>
+
+                        <TableCell align="right">
+                          <div className={classes.tr}>{game.released}</div>
+                        </TableCell>
+                        <TableCell align="right">
+                          <div className={classes.tr}>{game.rating}</div>
+                        </TableCell>
+                      </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </Paper>

@@ -35,9 +35,39 @@ export default class UserService {
     .then(response => response.json()
     )
   }
+
   findUserById(uid) {
     return fetch("https://game-webapp-server.herokuapp.com/users/" + uid)
     .then(response => response.json())
+  }
+
+  addGameForUser(userId, game) {
+
+    return fetch(
+        'https://game-webapp-server.herokuapp.com/users/' + userId + "/games", {
+          method: 'POST',
+          body: JSON.stringify(game),
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+  }
+
+  deleteGameForUser(userId, gameId) {
+
+    return fetch(
+        'https://game-webapp-server.herokuapp.com/users/' + userId + "/games/"
+        + gameId, {
+          method: 'DELETE',
+          headers:{
+            'content-type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Credentials':true,
+            'Access-Control-Allow-Origin':true
+  }
+
+        }).then(response => response.json())
+
   }
 
 }

@@ -47,7 +47,8 @@ class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ""
+      search: "",
+      reNav:"/"
     }
 
   }
@@ -57,6 +58,19 @@ class SearchBar extends React.Component {
     if (code === 13) {
 
       this.props.action(this.state.search)
+    }
+  }
+
+  componentDidMount() {
+    if (typeof (this.props.userId) == 'undefined') {
+
+    } else {
+        this.setState({
+
+          reNav:"/user/"+this.props.userId,
+
+
+      })
     }
   }
 
@@ -77,7 +91,7 @@ class SearchBar extends React.Component {
                 alignItems="center"
             >
 
-              <Link to={'/'}>
+              <Link to={this.state.reNav}>
                 <Fab className={classes.fab} color="primary" aria-label="add">
                   <ArrowBackIcon className={classes.backicon}/>
                 </Fab>

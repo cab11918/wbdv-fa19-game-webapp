@@ -28,7 +28,7 @@ class ProfilePage extends React.Component {
 
         <div>
 <NavBar/>
-<ProfileForm/>
+<ProfileForm userId={this.props.match.params.userId}/>
 
         </div>
 

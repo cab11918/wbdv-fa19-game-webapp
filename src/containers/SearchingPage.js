@@ -56,6 +56,7 @@ class SearchingPage extends React.Component {
           })
         }
     )
+
   }
 
   getDetails(gameId) {
@@ -84,7 +85,7 @@ class SearchingPage extends React.Component {
         <div>
 
           <NavBar/>
-          <SearchBar action={this.handler}/>
+          <SearchBar userId={this.props.match.params.userId} action={this.handler}/>
 
 
           <Grid
@@ -96,7 +97,7 @@ class SearchingPage extends React.Component {
 
             <Grid item xs={8}>
 
-              <GameTable results={this.state.results}
+              <GameTable userId={this.props.match.params.userId} results={this.state.results}
                          getDetails={this.getDetails}/>
 
 

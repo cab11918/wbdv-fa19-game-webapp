@@ -11,6 +11,7 @@ import {Typography} from "@material-ui/core";
 import GameService from "../services/GameService"
 import UserService from "../services/UserService"
 import Grow from '@material-ui/core/Grow';
+import Divider from '@material-ui/core/Divider';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -49,7 +50,7 @@ const useStyles = theme => ({
 
   },
   mainGrid: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(5)
 
   },
   helloWord: {
@@ -61,9 +62,10 @@ const useStyles = theme => ({
     width: 120,
     height: 80,
     borderRadius: 10,
-    marginRight: theme.spacing(2),
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
 
   },
   logo: {
@@ -97,15 +99,19 @@ class FunctionPanel extends React.Component {
 
     this.state = {
       results: [],
+      reNav: '',
+      reNavSearch: '/searching',
       name: "Guest",
-      userLoginText: "LOG IN"
+      userLoginText: "LOG IN",
+      userId: "",
+      gameList: [],
     }
 
   }
 
   componentDidMount() {
 
-    this.gameService.getFeaturedGames(40).then(response => {
+    this.gameService.getFeaturedGames(20).then(response => {
           this.setState({
 
             results: response.results
@@ -119,10 +125,18 @@ class FunctionPanel extends React.Component {
       this.userService.findUserById(this.props.userId).then(user => {
         this.setState({
           name: user.name,
-          userLoginText:"LOG OUT"
+          reNav: "/profile/" + user.id,
+          userLoginText: "LOG OUT",
+          reNavSearch: "/user/" + user.id + "/searching",
+          userId: "/user/" + user.id,
+          gameList: user.games,
+
 
         })
       })
+
+
+
     }
 
   }
@@ -194,7 +208,7 @@ class FunctionPanel extends React.Component {
                   className={classes.card}>
 
 
-                <Link to="/searching">
+                <Link to={this.state.reNavSearch}>
                   <Button
                       variant="contained"
                       color="primary"
@@ -205,7 +219,7 @@ class FunctionPanel extends React.Component {
                   </Button>
                 </Link>
 
-                <Link to="/profile">
+                <Link to={this.state.reNav}>
                   <Button
                       variant="contained"
                       color="secondary"
@@ -218,23 +232,82 @@ class FunctionPanel extends React.Component {
 
               </Grid>
 
+              <Grid
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="flex-start"
+                  className={classes.card}
+
+              >
+
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+
+                >
+
+                  <Typography variant={"h3"} className={classes.helloWord}>
+                    My Games
+                  </Typography>
+                </Grid>
+
+
+                {
+                  this.state.gameList.map((game, index) => (
+
+                      <Grow key={game.id} in={true}
+                            style={{transformOrigin: '0 0 0'}}
+                            {...({timeout: 1000 + index * 50})}>
+                        <a href={this.state.userId + '/detail/' + game.gameId}>
+
+
+                          <img src={game.imageUrl}
+                               className={classes.img}/>
+
+
+
+
+                        </a>
+                      </Grow>
+                  ))
+                }
+              </Grid>
 
               <Grid
                   container
                   direction="row"
-                  justify="center"
-                  alignItems="center"
+                  justify="flex-start"
+                  alignItems="flex-start"
                   className={classes.card}
 
               >
+
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+
+                >
+
+                  <Typography variant={"h3"} className={classes.helloWord}>
+                    Featured Games
+                  </Typography>
+                </Grid>
+
 
                 {
                   this.state.results.map((game, index) => (
                       <Grow key={game.id} in={true}
                             style={{transformOrigin: '0 0 0'}}
-                            {...({timeout: 1000 + index * 100})}>
+                            {...({timeout: 1000 + index * 50})}>
+                        <a href={this.state.userId + '/detail/' + game.id}>
                         <img src={game.background_image}
                              className={classes.img}/>
+                        </a>
                       </Grow>
                   ))
                 }

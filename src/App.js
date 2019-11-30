@@ -31,11 +31,13 @@ function App() {
 
           <Switch>
             <Route path={"/login"} component={LoginPage}></Route>
-            <Route path={"/searching"} component={SearchingPage}></Route>
+            <Route exact path={"/searching"} component={SearchingPage}></Route>
+            <Route exact path={"/user/:userId/searching"} component={SearchingPage}></Route>
             <Route exact path={"/"} component={LandingPage}></Route>
             <Route exact path={"/user/:userId"} component={LandingPage}></Route>
-            <Route path={"/detail/:gameId"} component={DetailPage}></Route>
-            <Route path={"/profile"} component={ProfilePage}></Route>
+            <Route exact path={"/detail/:gameId"} component={DetailPage}></Route>
+            <Route exact path={"/user/:userId/detail/:gameId"} component={DetailPage}></Route>
+            <Route path={"/profile/:userId"} component={ProfilePage}></Route>
             <Route path={"/register"} component={RegisterPage}></Route>
           </Switch>
 

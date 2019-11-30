@@ -66,7 +66,9 @@ class DetailPage extends React.Component {
 
 
 
-      <GameDetails gameId={this.props.match.params.gameId}/>
+      <GameDetails
+          userId={this.props.match.params.userId}
+          gameId={this.props.match.params.gameId}/>
 
     </Grid>
 

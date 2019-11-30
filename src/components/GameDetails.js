@@ -29,9 +29,19 @@ import Grid from "@material-ui/core/Grid";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+
 import Fab from "@material-ui/core/Fab";
 import GameService from '../services/GameService'
 import grey from "@material-ui/core/colors/grey";
+import Button from "@material-ui/core/Button";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Avatar from "@material-ui/core/Avatar";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import UserService from "../services/UserService";
 
 const useStyles = (theme => ({
 
@@ -85,12 +95,15 @@ const useStyles = (theme => ({
     display: 'flex',
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    marginTop: theme.spacing(8),
+    backgroundColor: grey[500],
+
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    fontSize: 12,
+    fontSize: 20,
 
   },
   fab: {
@@ -98,7 +111,42 @@ const useStyles = (theme => ({
   },
   backIcon: {
     fontSize: 25,
-  }
+  },
+  button: {
+
+    fontSize: 15,
+
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
+  reviewIcon: {
+    width: 30,
+    height: 30,
+  },
+
+  reviewBox: {
+    fontSize: 15,
+  },
+  bigAvatar: {
+
+    width: 40,
+    height: 40,
+    fontSize: 20,
+
+  },
+  reviewerName: {
+    marginRight: theme.spacing(1)
+
+  },
+  reviewContainer: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
+  },
+  alertBox: {
+    fontSize: 20
+  },
 
 }));
 
@@ -108,11 +156,12 @@ function createMarkup(data) {
 
 class GameDetails extends React.Component {
 
-  service = GameService.getInstance()
+  gameService = GameService.getInstance()
+  userService = UserService.getInstance()
 
   componentDidMount() {
 
-    this.service.getDetails(this.props.gameId).then(response =>
+    this.gameService.getDetails(this.props.gameId).then(response =>
         response.clip === null ? this.setState({
               game: response,
               videoUrl: "",
@@ -127,6 +176,26 @@ class GameDetails extends React.Component {
             })
     )
 
+    if (typeof (this.props.userId) == 'undefined') {
+
+    } else {
+      this.setState({
+        reNav: "/user/" + this.props.userId + "/searching"
+
+      })
+    }
+
+  }
+
+  addGame() {
+    this.setState({
+      addButtonText: "Added!"
+    })
+    this.userService.addGameForUser(this.props.userId, {
+      gameId: this.props.gameId,
+      name: this.state.game.name,
+      imageUrl: this.state.game.background_image
+    })
   }
 
   constructor(props) {
@@ -136,12 +205,12 @@ class GameDetails extends React.Component {
       results: [],
       game: [],
       videoUrl: "",
-      tags: []
+      tags: [],
+      addButtonText: "Add to list",
+      reNav: "/searching"
     }
 
   }
-
-
 
   render() {
     const {classes} = this.props;
@@ -151,17 +220,17 @@ class GameDetails extends React.Component {
         <div className={classes.root}>
 
 
-
           <Paper className={classes.paper}>
 
-            <Link to={'/searching'}>
+            <Link to={this.state.reNav}>
 
-              <Fab className={classes.fab}  color="primary" aria-label="add"
+              <Fab className={classes.fab} color="primary" aria-label="add"
               >
-                <ArrowBackIcon className={classes.backIcon} />
+                <ArrowBackIcon className={classes.backIcon}/>
               </Fab>
 
             </Link>
+
 
             <Card className={classes.card}>
 
@@ -173,6 +242,27 @@ class GameDetails extends React.Component {
                   {this.state.game.name}
 
                 </Typography>
+
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-end"
+                    alignItems="flex-end"
+
+                >
+                  <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                      onClick={() => this.addGame()}
+                      startIcon={<AddCircleOutlineIcon
+                          className={classes.icon}/>}
+                  >
+                    {this.state.addButtonText}
+                  </Button>
+
+                </Grid>
+
                 <Divider className={classes.div}/>
 
 
@@ -245,19 +335,51 @@ class GameDetails extends React.Component {
 
                 <Divider className={classes.div}/>
 
+                // for test only
+
+                <Grid
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    className={classes.reviewContainer}
+                >
+
+                  <Grid
+
+
+                  >
+                    <Avatar
+                        className={classes.bigAvatar}>{"MINGHAO YU".match(
+                        /\b\w/g)
+                    }</Avatar>
+
+                    <Typography variant="h6" className={classes.reviewerName}>
+                      Minghao Yu
+
+                    </Typography>
+
+                  </Grid>
+                  <SnackbarContent className={classes.reviewBox}
+                                   message="I love snacks."/>
+
+
+                </Grid>
+
 
                 <Paper className={classes.review}>
 
+
                   <InputBase
                       className={classes.input}
-                      placeholder="Write review"
+                      placeholder="Say something good ..."
                       inputProps={{'aria-label': 'Write review'}}
 
                   />
                   <IconButton className={classes.iconButton} aria-label="review"
 
                   >
-                    <RateReviewIcon/>
+                    <RateReviewIcon className={classes.reviewIcon}/>
                   </IconButton>
 
                 </Paper>

@@ -39,7 +39,9 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Fab from "@material-ui/core/Fab";
 import GameService from '../services/GameService'
+import DeleteIcon from '@material-ui/icons/Delete';
 import grey from "@material-ui/core/colors/grey";
+import UserService from "../services/UserService";
 
 const useStyles = (theme => ({
 
@@ -59,7 +61,7 @@ const useStyles = (theme => ({
   bigAvatar: {
     width: 60,
     height: 60,
-    fontSize:25
+    fontSize: 25
   },
   name: {
     marginLeft: theme.spacing(2),
@@ -79,10 +81,10 @@ const useStyles = (theme => ({
     fontSize: 20,
 
   },
-  formControl:{
+  formControl: {
 
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
 
   },
   fab: {
@@ -91,14 +93,32 @@ const useStyles = (theme => ({
   backIcon: {
     fontSize: 25,
   },
-  mainGrid:{
-    paddingTop:20
+  mainGrid: {
+    paddingTop: 20
+  },
+  th: {
+    fontSize: 15
+  },
+  tr: {
+    fontSize: 13
+  },
+  img: {
+    width: 60,
+    height: 40,
+    marginRight: 20,
+    borderRadius: 5
+
+  },
+  trashLogo:{
+    width:20,
+    height:20
   }
 
 
 }));
 
 class ProfileForm extends React.Component {
+  userService = UserService.getInstance()
 
   constructor(props) {
 
@@ -107,10 +127,42 @@ class ProfileForm extends React.Component {
       results: [],
       game: [],
       videoUrl: "",
-      tags: []
+      tags: [],
+      name: "",
+      username: "",
+      password: "",
+      dob: "",
+      gender: "select",
+      email: "",
+      gameList: []
     }
 
+    this.userService.findUserById(this.props.userId).then(user => {
+      this.setState({
+            name: user.name,
+            username: user.username,
+            password: user.password,
+            dob: user.birth_day,
+            gender: user.gender,
+            email: user.email,
+            gameList: user.games
+          }
+      )
+
+    })
+
   }
+
+  deleteGame(userId, gameId) {
+    this.userService.deleteGameForUser(userId, gameId).then(gameList => {
+      this.setState({
+        gameList: gameList
+      })
+
+    })
+
+  }
+
 
   render() {
     const {classes} = this.props;
@@ -122,11 +174,11 @@ class ProfileForm extends React.Component {
 
           <Paper className={classes.paper}>
 
-            <Link to={'/'}>
+            <Link to={'/user/' + this.props.userId}>
 
-              <Fab className={classes.fab}  color="primary" aria-label="add"
+              <Fab className={classes.fab} color="primary" aria-label="add"
               >
-                <ArrowBackIcon className={classes.backIcon} />
+                <ArrowBackIcon className={classes.backIcon}/>
               </Fab>
 
             </Link>
@@ -139,142 +191,167 @@ class ProfileForm extends React.Component {
                 className={classes.mainGrid}
             >
 
-        <Grid item xs={4}>
-          <Grid
-              container
-              direction="row"
-              justify="flex-start"
-              alignItems="flex-start"
-          >
-
-            <Avatar className={classes.bigAvatar}>OP</Avatar>
-
-            <Typography variant={"h4"} className={classes.name}>
-              BILL GATES
-            </Typography>
-
-
-          </Grid>
-
-          <TextField
-              disabled
-              id="standard-disabled"
-              label="Username"
-              defaultValue="bGates=$111"
-              className={classes.textField}
-              margin="normal"
-              InputProps={{classes: {root: classes.inputRoot}}}
-              InputLabelProps={{
-                classes: {
-                  root: classes.labelRoot,
-                }
-              }}
-          />
-
-          <TextField
-              disabled
-              id="standard-disabled"
-              label="Password"
-              type="password"
-              defaultValue="bGates=$111"
-              className={classes.textField}
-              margin="normal"
-              InputProps={{classes: {root: classes.inputRoot}}}
-              InputLabelProps={{
-                classes: {
-                  root: classes.labelRoot,
-                }
-              }}
-          />
-
-          <TextField
-              disabled
-              id="standard-disabled"
-              label="Date of Birth"
-              type="date"
-              defaultValue="2017-05-24"
-              className={classes.textField}
-              margin="normal"
-              InputProps={{classes: {root: classes.inputRoot}}}
-              InputLabelProps={{
-                classes: {
-                  root: classes.labelRoot,
-                }
-              }}
-          />
-
-          <FormControl
-              className={classes.formControl} disabled>
-            <InputLabel
-                className={classes.labelRoot}
-                id="demo-simple-select-disabled-label">Gender</InputLabel>
-            <Select
-                className={classes.inputRoot}
-                value={20}>
-              <MenuItem value={10}>Male</MenuItem>
-              <MenuItem value={20}>Female</MenuItem>
-
-            </Select>
-          </FormControl>
-
-
-          <TextField
-              disabled
-              id="standard-disabled"
-              label="Email"
-              type="email"
-              defaultValue="b.gates@husky.neu.edu"
-              className={classes.textField}
-              margin="normal"
-              InputProps={{classes: {root: classes.inputRoot}}}
-              InputLabelProps={{
-                classes: {
-                  root: classes.labelRoot,
-                }
-              }}
-          />
-
-
-        </Grid>
-
-            <Grid item xs={4}>
-
-              <Typography variant={"h2"}>
-                Game List
-              </Typography>
-              <Divider/>
-
-              <ul>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-                <li>game</li>
-              </ul>
-
-            </Grid>
-
               <Grid item xs={4}>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                >
+
+                  <Avatar
+                      className={classes.bigAvatar}>{this.state.name.match(
+                      /\b\w/g)
+                  }</Avatar>
+
+                  <Typography variant={"h4"} className={classes.name}>
+                    {this.state.name}
+                  </Typography>
+
+
+                </Grid>
+
+                <TextField
+                    disabled
+                    id="standard-disabled"
+                    label="Username"
+                    value={this.state.username}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{classes: {root: classes.inputRoot}}}
+                    InputLabelProps={{
+                      classes: {
+                        root: classes.labelRoot,
+                      }
+                    }}
+                />
+
+                <TextField
+                    disabled
+                    id="standard-disabled"
+                    label="Password"
+                    type="password"
+                    value={this.state.password}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{classes: {root: classes.inputRoot}}}
+                    InputLabelProps={{
+                      classes: {
+                        root: classes.labelRoot,
+                      }
+                    }}
+                />
+
+                <TextField
+                    disabled
+                    id="standard-disabled"
+                    label="Date of Birth"
+                    type="date"
+                    value={this.state.dob}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{classes: {root: classes.inputRoot}}}
+                    InputLabelProps={{
+                      classes: {
+                        root: classes.labelRoot,
+                      }
+                    }}
+                />
+
+                <FormControl disabled
+                             className={classes.formControl}>
+                  <InputLabel
+                      className={classes.labelRoot}>Gender</InputLabel>
+                  <Select
+                      className={classes.inputRoot}
+                      value={this.state.gender}
+
+                      onChange={(event) => this.setState({
+                        gender: event.target.value
+                      })
+                      }>
+                    <MenuItem value={"select"}>Select</MenuItem>
+                    <MenuItem value={"male"}>Male</MenuItem>
+                    <MenuItem value={"female"}>Female</MenuItem>
+                    <MenuItem value={"other"}>Other</MenuItem>
+
+                  </Select>
+                </FormControl>
+
+
+                <TextField
+                    disabled
+                    id="standard-disabled"
+                    label="Email"
+                    type="email"
+                    value={this.state.email}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{classes: {root: classes.inputRoot}}}
+                    InputLabelProps={{
+                      classes: {
+                        root: classes.labelRoot,
+                      }
+                    }}
+                />
+
+
+              </Grid>
+
+              <Grid item xs={8}>
 
                 <Typography variant={"h2"}>
-                  Friend List
+                  Game List
                 </Typography>
                 <Divider/>
 
-                <ul>
-                  <li>friend</li>
-                  <li>friend</li>
-                  <li>friend</li>
-                  <li>friend</li>
-                  <li>friend</li>
-                  <li>friend</li>
-                  <li>friend</li>
-                  <li>friend</li>
-                </ul>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead className={classes.th}>
+                    <TableRow>
+                      <TableCell>
+                        <div className={classes.th}></div>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className={classes.th}></div>
+                      </TableCell>
+
+
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+
+                      this.state.gameList.map(game => (
+                          <TableRow key={game.id}>
+
+                            <TableCell component="th" scope="row">
+
+                              <div className={classes.tr}>
+                                <img src={game.imageUrl}
+                                     className={classes.img}/>
+                                <a>{game.name}</a>
+                              </div>
+
+                            </TableCell>
+
+                            <TableCell>
+                              <IconButton   key={game.id} aria-label="delete"
+                                          onClick={(event) => {
+                                            this.deleteGame(this.props.userId,
+                                                game.id)
+                                          }}>
+                                <DeleteIcon className={classes.trashLogo}/>
+                              </IconButton>
+                            </TableCell>
+
+
+                          </TableRow>
+                      ))
+
+                    }
+                  </TableBody>
+                </Table>
 
               </Grid>
 
