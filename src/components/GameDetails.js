@@ -42,6 +42,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import UserService from "../services/UserService";
+import SendIcon from '@material-ui/icons/Send';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const useStyles = (theme => ({
 
@@ -97,10 +99,12 @@ const useStyles = (theme => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: theme.spacing(8),
-    backgroundColor: grey[500],
+    backgroundColor: grey[300],
 
   },
   input: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     marginLeft: theme.spacing(1),
     flex: 1,
     fontSize: 20,
@@ -122,8 +126,8 @@ const useStyles = (theme => ({
     height: 30,
   },
   reviewIcon: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
   },
 
   reviewBox: {
@@ -147,6 +151,9 @@ const useStyles = (theme => ({
   alertBox: {
     fontSize: 20
   },
+  reviewFab: {
+    fontSize: 15
+  }
 
 }));
 
@@ -180,9 +187,15 @@ class GameDetails extends React.Component {
 
     } else {
       this.setState({
-        reNav: "/user/" + this.props.userId + "/searching"
+        reNav: "/user/" + this.props.userId + "/searching",
 
       })
+      this.userService.findAllUsers().then(users => {
+        this.setState({
+          users: users
+        })
+      })
+
     }
 
   }
@@ -198,6 +211,24 @@ class GameDetails extends React.Component {
     })
   }
 
+  addReview() {
+    if (this.state.review !== "") {
+      this.userService.addReview(this.props.userId, {
+        gameId: this.props.gameId,
+        review: this.state.review
+      }).then(users => {
+        this.setState({
+          users: users,
+
+        })
+      })
+
+      this.setState({
+        review:""
+      })
+    }
+  }
+
   constructor(props) {
 
     super(props);
@@ -207,7 +238,9 @@ class GameDetails extends React.Component {
       videoUrl: "",
       tags: [],
       addButtonText: "Add to list",
-      reNav: "/searching"
+      reNav: "/searching",
+      users: [],
+      review: ""
     }
 
   }
@@ -255,7 +288,7 @@ class GameDetails extends React.Component {
                       color="secondary"
                       className={classes.button}
                       onClick={() => this.addGame()}
-                      startIcon={<AddCircleOutlineIcon
+                      startIcon={<FavoriteIcon
                           className={classes.icon}/>}
                   >
                     {this.state.addButtonText}
@@ -288,6 +321,7 @@ class GameDetails extends React.Component {
 
                     <div className={classes.card}>
                       {this.state.tags.map(tag => (
+
                           <Chip size="small" icon={<LabelIcon/>}
                                 label={tag.name} className={classes.chip}/>
 
@@ -335,36 +369,43 @@ class GameDetails extends React.Component {
 
                 <Divider className={classes.div}/>
 
-                // for test only
 
-                <Grid
-                    container
-                    direction="column"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    className={classes.reviewContainer}
-                >
+                {this.state.users.map((user, index) => (
 
-                  <Grid
+                    user.reviews.map(
+                        (review) => (
+                            (review.gameId == this.props.gameId ? (
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                    className={classes.reviewContainer}
+                                >
 
-
-                  >
-                    <Avatar
-                        className={classes.bigAvatar}>{"MINGHAO YU".match(
-                        /\b\w/g)
-                    }</Avatar>
-
-                    <Typography variant="h6" className={classes.reviewerName}>
-                      Minghao Yu
-
-                    </Typography>
-
-                  </Grid>
-                  <SnackbarContent className={classes.reviewBox}
-                                   message="I love snacks."/>
+                                  <Grid
 
 
-                </Grid>
+                                  >
+                                    <Avatar
+                                        className={classes.bigAvatar}>{user.name.match(
+                                        /\b\w/g)
+                                    }</Avatar>
+
+                                    <Typography variant="h6"
+                                                className={classes.reviewerName}>
+                                      {user.name}
+
+                                    </Typography>
+
+                                  </Grid>
+                                  <SnackbarContent className={classes.reviewBox}
+                                                   message={review.review}/>
+
+
+                                </Grid>) : <span></span>)))
+
+                ))}
 
 
                 <Paper className={classes.review}>
@@ -372,15 +413,29 @@ class GameDetails extends React.Component {
 
                   <InputBase
                       className={classes.input}
-                      placeholder="Say something good ..."
+                      value={this.state.review}
                       inputProps={{'aria-label': 'Write review'}}
+                      placeholder={"Say something good..."}
+                      onChange={(event) => {
+                        this.setState({
+                          review: event.target.value
+                        })
+                      }}
 
                   />
-                  <IconButton className={classes.iconButton} aria-label="review"
-
+                  <Fab
+                      variant="extended"
+                      size="medium"
+                      color="primary"
+                      aria-label="add"
+                      className={classes.reviewFab}
+                      onClick={() => {
+                        this.addReview()
+                      }}
                   >
-                    <RateReviewIcon className={classes.reviewIcon}/>
-                  </IconButton>
+                    <SendIcon className={classes.reviewIcon}/>
+                    Send
+                  </Fab>
 
                 </Paper>
 

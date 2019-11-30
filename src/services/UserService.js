@@ -59,13 +59,25 @@ export default class UserService {
         'https://game-webapp-server.herokuapp.com/users/' + userId + "/games/"
         + gameId, {
           method: 'DELETE',
-          headers:{
+          headers: {
             'content-type': 'application/json',
             'Accept': 'application/json',
-            'Access-Control-Allow-Credentials':true,
-            'Access-Control-Allow-Origin':true
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Origin': true
+          }
+
+        }).then(response => response.json())
+
   }
 
+  addReview(userId,review) {
+    return fetch(
+        'https://game-webapp-server.herokuapp.com/users/' + userId + "/reviews", {
+          method: 'POST',
+          body: JSON.stringify(review),
+          headers: {
+            'content-type': 'application/json'
+          }
         }).then(response => response.json())
 
   }
