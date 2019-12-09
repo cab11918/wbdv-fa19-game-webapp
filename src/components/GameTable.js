@@ -75,13 +75,18 @@ class SimpleTable extends React.Component {
                     <div className={classes.th}>Name</div>
                   </TableCell>
 
-
+                  <TableCell align="right">
+                    <div className={classes.th}>Playtime</div>
+                  </TableCell>
                   <TableCell align="right">
                     <div className={classes.th}>Release Date</div>
                   </TableCell>
                   <TableCell align="right">
                     <div className={classes.th}>Rating</div>
                   </TableCell>
+
+
+
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -103,11 +108,16 @@ class SimpleTable extends React.Component {
                         </TableCell>
 
                         <TableCell align="right">
+                          <div className={classes.tr}>{game.playtime}</div>
+                        </TableCell>
+
+                        <TableCell align="right">
                           <div className={classes.tr}>{game.released}</div>
                         </TableCell>
                         <TableCell align="right">
                           <div className={classes.tr}>{game.rating}</div>
                         </TableCell>
+
                       </TableRow>
                   ))}
               </TableBody>

@@ -40,8 +40,11 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Fab from "@material-ui/core/Fab";
 import GameService from '../services/GameService'
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import grey from "@material-ui/core/colors/grey";
 import UserService from "../services/UserService";
+import Button from "@material-ui/core/Button";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 const useStyles = (theme => ({
 
@@ -71,7 +74,7 @@ const useStyles = (theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: "80%",
+    width: '80%',
   },
   inputRoot: {
     fontSize: 25,
@@ -100,7 +103,8 @@ const useStyles = (theme => ({
     fontSize: 15
   },
   tr: {
-    fontSize: 13
+    fontSize: 13,
+
   },
   img: {
     width: 60,
@@ -109,11 +113,28 @@ const useStyles = (theme => ({
     borderRadius: 5
 
   },
-  trashLogo:{
-    width:20,
-    height:20
-  }
+  trashLogo: {
+    width: 20,
+    height: 20
+  },
+  eachTable: {
+    paddingTop: 30,
+    padding: theme.spacing(2),
+    color: theme.palette.text.secondary,
+  },
 
+  buttonLogin: {
+    fontSize: 15,
+    backgroundColor: grey[600],
+  },
+  profileGrid: {
+    maxHeight: 500
+  },
+  tableAvatar: {
+    width: 40,
+    height: 40,
+    fontSize: 20
+  }
 
 }));
 
@@ -134,7 +155,12 @@ class ProfileForm extends React.Component {
       dob: "",
       gender: "select",
       email: "",
-      gameList: []
+      gameList: [],
+      reviews: [],
+      canEdit: true,
+      updateText: "Update profile",
+      users: [],
+      friends: []
     }
 
     this.userService.findUserById(this.props.userId).then(user => {
@@ -145,10 +171,18 @@ class ProfileForm extends React.Component {
             dob: user.birth_day,
             gender: user.gender,
             email: user.email,
-            gameList: user.games
+            gameList: user.games,
+            reviews: user.reviews,
+            friends: user.friends
           }
       )
 
+    })
+
+    this.userService.findAllUsers().then(users => {
+      this.setState({
+        users: users
+      })
     })
 
   }
@@ -163,6 +197,55 @@ class ProfileForm extends React.Component {
 
   }
 
+  deleteFriend(userId, friendId) {
+    this.userService.deleteFriend(userId, friendId).then(friends => {
+      this.setState({
+        friends: friends
+      })
+
+    })
+
+  }
+
+
+
+  updateProfile() {
+
+    if (this.state.canEdit) {
+      this.setState({
+        updateText: "Done",
+        canEdit: false
+      })
+
+    } else {
+      this.userService.updateProfile(this.props.userId, {
+        name: this.state.name,
+        password: this.state.password,
+        birthday: this.state.dob,
+        gender: this.state.gender,
+        email: this.state.email,
+        reviews: this.state.reviews,
+        games: this.state.gameList
+      })
+      this.setState({
+        updateText: "Update Profile",
+        canEdit: true
+      })
+
+    }
+
+  }
+
+  addFriend(userId, user) {
+    this.userService.addFriend(userId, user).then
+    (
+        friends => {
+          this.setState({
+            friends: friends
+          })
+        }
+    )
+  }
 
   render() {
     const {classes} = this.props;
@@ -189,121 +272,417 @@ class ProfileForm extends React.Component {
                 justify="flex-start"
                 alignItems="flex-start"
                 className={classes.mainGrid}
+
             >
 
-              <Grid item xs={4}>
-                <Grid
-                    container
+
+              <Grid container
                     direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                >
+              >
+                <Grid container xs={3} className={classes.profileGrid}>
 
-                  <Avatar
-                      className={classes.bigAvatar}>{this.state.name.match(
-                      /\b\w/g)
-                  }</Avatar>
 
-                  <Typography variant={"h4"} className={classes.name}>
-                    {this.state.name}
-                  </Typography>
+                  <Grid
+                      container
+                      direction="row"
+                      justify="flex-start"
+                      alignItems="flex-start"
+
+
+                  >
+
+
+                    <Avatar
+                        className={classes.bigAvatar}>{this.state.name.match(
+                        /\b\w/g)
+                    }</Avatar>
+
+                    <Typography variant={"h4"} className={classes.name}>
+                      {this.state.name}
+                    </Typography>
+
+
+                  </Grid>
+
+                  <Grid
+
+                      direction="row"
+                      xs={12}
+
+                  >
+
+                    <TextField
+                        disabled
+                        id="standard-disabled"
+                        label="Username"
+                        value={this.state.username}
+                        className={classes.textField}
+                        margin="normal"
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                    />
+                  </Grid>
+
+                  <Grid
+
+                      direction="row"
+                      xs={12}
+
+
+                  >
+
+                    <TextField
+                        disabled={this.state.canEdit}
+                        id="standard-disabled"
+                        label="Password"
+                        type="password"
+                        value={this.state.password}
+                        className={classes.textField}
+                        margin="normal"
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                        onChange={(event) => this.setState({
+                          password: event.target.value
+                        })}
+                    />
+                  </Grid>
+                  <Grid
+
+                      direction="row"
+                      xs={12}
+
+
+                  >
+                    <TextField
+                        disabled={this.state.canEdit}
+                        id="standard-disabled"
+                        label="Date of Birth"
+                        type="date"
+                        value={this.state.dob}
+                        className={classes.textField}
+                        margin="normal"
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                        onChange={(event) => this.setState({
+                          dob: event.target.value
+                        })}
+                    />
+                  </Grid>
+
+                  <Grid
+
+                      direction="row"
+                      xs={12}
+
+                  >
+
+                    <FormControl disabled={this.state.canEdit}
+                                 className={classes.formControl}>
+                      <InputLabel
+                          className={classes.labelRoot}>Gender</InputLabel>
+                      <Select
+                          className={classes.inputRoot}
+                          value={this.state.gender}
+
+                          onChange={(event) => this.setState({
+                            gender: event.target.value
+                          })
+                          }>
+                        <MenuItem value={"select"}>Select</MenuItem>
+                        <MenuItem value={"male"}>Male</MenuItem>
+                        <MenuItem value={"female"}>Female</MenuItem>
+                        <MenuItem value={"other"}>Other</MenuItem>
+
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid
+
+                      direction="row"
+                      xs={12}
+
+                  >
+
+                    <TextField
+                        disabled={this.state.canEdit}
+                        id="standard-disabled"
+                        label="Email"
+                        type="email"
+                        value={this.state.email}
+                        className={classes.textField}
+                        margin="normal"
+                        InputProps={{classes: {root: classes.inputRoot}}}
+                        InputLabelProps={{
+                          classes: {
+                            root: classes.labelRoot,
+                          }
+                        }}
+                        onChange={(event) => this.setState({
+                          email: event.target.value
+                        })}
+                    />
+
+
+                  </Grid>
+
+
+                  <Button className={classes.buttonLogin} variant="contained"
+                          onClick={() => {
+                            this.updateProfile()
+                          }}
+                          color="primary">
+                    {this.state.updateText}
+                  </Button>
 
 
                 </Grid>
 
-                <TextField
-                    disabled
-                    id="standard-disabled"
-                    label="Username"
-                    value={this.state.username}
-                    className={classes.textField}
-                    margin="normal"
-                    InputProps={{classes: {root: classes.inputRoot}}}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.labelRoot,
+
+                <Grid item xs={6}
+                      className={classes.eachTable}>
+
+
+                  <Typography variant={"h3"}>
+                    My Games
+                  </Typography>
+
+
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead className={classes.th}>
+                      <TableRow>
+                        <TableCell>
+                          <div className={classes.th}></div>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className={classes.th}></div>
+                        </TableCell>
+
+
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+
+                        this.state.gameList.map(game => (
+                            <TableRow key={game.id}>
+
+                              <TableCell component="th" scope="row">
+
+                                <div className={classes.tr}>
+                                  <img src={game.imageUrl}
+                                       className={classes.img}/>
+                                  <a href={"/user/" + this.props.userId
+                                  + "/detail/" + game.gameId}>{game.name}</a>
+                                </div>
+
+                              </TableCell>
+
+                              <TableCell style={{textAlign: 'right'}}>
+                                <IconButton key={game.id} aria-label="delete"
+                                            onClick={(event) => {
+                                              this.deleteGame(this.props.userId,
+                                                  game.id)
+                                            }}>
+                                  <DeleteIcon className={classes.trashLogo}/>
+                                </IconButton>
+                              </TableCell>
+
+
+                            </TableRow>
+                        ))
+
                       }
-                    }}
-                />
+                    </TableBody>
+                  </Table>
 
-                <TextField
-                    disabled
-                    id="standard-disabled"
-                    label="Password"
-                    type="password"
-                    value={this.state.password}
-                    className={classes.textField}
-                    margin="normal"
-                    InputProps={{classes: {root: classes.inputRoot}}}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.labelRoot,
+
+                </Grid>
+
+
+                <Grid item xs={3}
+                      className={classes.eachTable}>
+
+                  <Typography variant={"h3"}>
+                    My Friends
+                  </Typography>
+
+
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead className={classes.th}>
+                      <TableRow>
+                        <TableCell>
+                          <div className={classes.th}></div>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className={classes.th}></div>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className={classes.th}></div>
+                        </TableCell>
+
+
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+
+                        this.state.friends.map(friend => (
+                            <TableRow key={friend.id}>
+
+                              <TableCell component="th" scope="row">
+
+                                <div className={classes.tr}>
+                                  <Avatar
+                                      className={classes.tableAvatar}>{friend.username.match(
+                                      /\b\w/g)
+                                  }</Avatar>
+
+
+                                </div>
+                              </TableCell>
+
+                              <TableCell component="th" scope="row">
+
+
+                                <div className={classes.tr}>
+
+                                  <a href={"/user/" + this.props.userId
+                                  + "/detail/"
+                                  + friend.id}>{friend.username}</a>
+                                </div>
+
+                              </TableCell>
+
+                              <TableCell style={{textAlign: 'right'}}>
+                                <IconButton key={friend.id} aria-label="delete"
+                                            onClick={(event) => {
+                                              this.deleteFriend(
+                                                  this.props.userId, friend.id)
+                                            }}>
+                                  <DeleteIcon className={classes.trashLogo}/>
+                                </IconButton>
+                              </TableCell>
+
+
+                            </TableRow>
+                        ))
+
                       }
-                    }}
-                />
-
-                <TextField
-                    disabled
-                    id="standard-disabled"
-                    label="Date of Birth"
-                    type="date"
-                    value={this.state.dob}
-                    className={classes.textField}
-                    margin="normal"
-                    InputProps={{classes: {root: classes.inputRoot}}}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.labelRoot,
-                      }
-                    }}
-                />
-
-                <FormControl disabled
-                             className={classes.formControl}>
-                  <InputLabel
-                      className={classes.labelRoot}>Gender</InputLabel>
-                  <Select
-                      className={classes.inputRoot}
-                      value={this.state.gender}
-
-                      onChange={(event) => this.setState({
-                        gender: event.target.value
-                      })
-                      }>
-                    <MenuItem value={"select"}>Select</MenuItem>
-                    <MenuItem value={"male"}>Male</MenuItem>
-                    <MenuItem value={"female"}>Female</MenuItem>
-                    <MenuItem value={"other"}>Other</MenuItem>
-
-                  </Select>
-                </FormControl>
+                    </TableBody>
+                  </Table>
 
 
-                <TextField
-                    disabled
-                    id="standard-disabled"
-                    label="Email"
-                    type="email"
-                    value={this.state.email}
-                    className={classes.textField}
-                    margin="normal"
-                    InputProps={{classes: {root: classes.inputRoot}}}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.labelRoot,
-                      }
-                    }}
-                />
+                </Grid>
+              </Grid>
 
+
+              <Grid contianer xs={3}
+                    className={classes.eachTable}>
+
+                <Typography variant={"h3"}>
+                  Users
+                </Typography>
+
+
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead className={classes.th}>
+                    <TableRow>
+                      <TableCell>
+                        <div className={classes.th}></div>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className={classes.th}></div>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className={classes.th}></div>
+                      </TableCell>
+
+
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+
+                      this.state.users.map(
+                          user => (user.id != this.props.userId ?
+                                  <TableRow key={user.id}>
+
+                                    <TableCell component="th" scope="row">
+
+                                      <div className={classes.tr}>
+                                        <Avatar
+                                            className={classes.tableAvatar}>{user.name.match(
+                                            /\b\w/g)
+                                        }</Avatar>
+
+
+                                      </div>
+
+
+                                    </TableCell>
+
+                                    <TableCell component="th" scope="row">
+
+                                      <div className={classes.tr}>
+
+                                        <a href={"adsadsa"}>{user.username}</a>
+
+                                      </div>
+
+
+                                    </TableCell>
+
+
+                                    <TableCell style={{textAlign: 'right'}}>
+                                      <IconButton key={user.id}
+                                                  aria-label="delete"
+                                                  onClick={() => this.addFriend(
+                                                      this.props.userId, {
+                                                        username: user.username,
+                                                        reviews: [],
+                                                        games: []
+
+                                                      })}>
+                                        <AddCircleOutlineIcon
+                                            className={classes.trashLogo}/>
+                                      </IconButton>
+                                    </TableCell>
+
+
+                                  </TableRow> : <span></span>
+                          ))
+
+                    }
+                  </TableBody>
+                </Table>
 
               </Grid>
 
-              <Grid item xs={8}>
 
-                <Typography variant={"h2"}>
-                  Game List
+              <Grid container xs={9}
+
+                    className={classes.eachTable}>
+                <Typography variant={"h3"}>
+                  My Reviews
                 </Typography>
-                <Divider/>
 
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead className={classes.th}>
@@ -322,27 +701,24 @@ class ProfileForm extends React.Component {
                   <TableBody>
                     {
 
-                      this.state.gameList.map(game => (
-                          <TableRow key={game.id}>
+                      this.state.reviews.map(review => (
+                          <TableRow key={review.id}>
 
                             <TableCell component="th" scope="row">
 
                               <div className={classes.tr}>
-                                <img src={game.imageUrl}
-                                     className={classes.img}/>
-                                <a>{game.name}</a>
+                                {review.gameName}
                               </div>
 
                             </TableCell>
 
-                            <TableCell>
-                              <IconButton   key={game.id} aria-label="delete"
-                                          onClick={(event) => {
-                                            this.deleteGame(this.props.userId,
-                                                game.id)
-                                          }}>
-                                <DeleteIcon className={classes.trashLogo}/>
-                              </IconButton>
+                            <TableCell className={classes.tr}
+                            >
+                              <a href={"/user/" + this.props.userId
+                              + "/detail/"
+                              + review.gameId}>
+                                {review.review}
+                              </a>
                             </TableCell>
 
 

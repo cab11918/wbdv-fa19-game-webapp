@@ -43,6 +43,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import UserService from "../services/UserService";
 import SendIcon from '@material-ui/icons/Send';
+import AddIcon from '@material-ui/icons/Add';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const useStyles = (theme => ({
@@ -153,6 +154,12 @@ const useStyles = (theme => ({
   },
   reviewFab: {
     fontSize: 15
+  },
+  addFriendFab: {
+
+  }, addFriendIcon: {
+width:10,
+    height:10
   }
 
 }));
@@ -215,16 +222,18 @@ class GameDetails extends React.Component {
     if (this.state.review !== "") {
       this.userService.addReview(this.props.userId, {
         gameId: this.props.gameId,
-        review: this.state.review
+        gameName: this.state.game.name,
+        imageUrl: this.state.game.background_image,
+        review: this.state.review,
+
       }).then(users => {
         this.setState({
           users: users,
-
         })
       })
 
       this.setState({
-        review:""
+        review: ""
       })
     }
   }
@@ -240,7 +249,7 @@ class GameDetails extends React.Component {
       addButtonText: "Add to list",
       reNav: "/searching",
       users: [],
-      review: ""
+      review: "",
     }
 
   }
@@ -387,10 +396,21 @@ class GameDetails extends React.Component {
 
 
                                   >
-                                    <Avatar
-                                        className={classes.bigAvatar}>{user.name.match(
-                                        /\b\w/g)
-                                    }</Avatar>
+
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justify="flex-start"
+                                        alignItems="flex-start"
+                                    >
+                                      <Avatar
+                                          className={classes.bigAvatar}>{user.name.match(
+                                          /\b\w/g)
+                                      }</Avatar>
+
+
+
+                                    </Grid>
 
                                     <Typography variant="h6"
                                                 className={classes.reviewerName}>

@@ -14,7 +14,6 @@ import {withStyles} from "@material-ui/core/styles";
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import {Link} from 'react-router-dom'
 import UserService from '../services/UserService';
-import {promised} from "q";
 
 const useStyles = theme => ({
   root: {
@@ -111,7 +110,7 @@ class LoginBox extends React.Component {
             className={classes.grid}
         >
 
-          <Grid item xs={3}>
+          <Grid item xs={6} sm={3} >
             <Paper className={classes.paper}>
               <Card className={classes.card}>
                 <div className={classes.details}>

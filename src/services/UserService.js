@@ -60,19 +60,17 @@ export default class UserService {
         + gameId, {
           method: 'DELETE',
           headers: {
-            'content-type': 'application/json',
-            'Accept': 'application/json',
-            'Access-Control-Allow-Credentials': true,
-            'Access-Control-Allow-Origin': true
+            'content-type': 'application/json'
           }
 
         }).then(response => response.json())
 
   }
 
-  addReview(userId,review) {
+  addReview(userId, review) {
     return fetch(
-        'https://game-webapp-server.herokuapp.com/users/' + userId + "/reviews", {
+        'https://game-webapp-server.herokuapp.com/users/' + userId + "/reviews",
+        {
           method: 'POST',
           body: JSON.stringify(review),
           headers: {
@@ -80,6 +78,44 @@ export default class UserService {
           }
         }).then(response => response.json())
 
+  }
+
+  updateProfile(userId, user) {
+    return fetch(
+        'https://game-webapp-server.herokuapp.com/users/' + userId, {
+          method: 'PUT',
+          body: JSON.stringify(user),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(response => response.json())
+
+  }
+
+  deleteFriend(userId, friendId) {
+    return fetch(
+        'https://game-webapp-server.herokuapp.com/users/' + userId + "/friends/"
+        + friendId
+        , {
+          method: 'DELETE',
+          headers: {
+            'content-type': 'application/json'
+          }
+
+        }).then(response => response.json())
+
+  }
+
+  addFriend(userId, friend) {
+    return fetch(
+        'https://game-webapp-server.herokuapp.com/users/' + userId + "/friends",
+        {
+          method: 'POST',
+          body: JSON.stringify(friend),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(response => response.json())
   }
 
 }

@@ -17,6 +17,7 @@ import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import grey from "@material-ui/core/colors/grey";
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = theme => ({
   root: {
@@ -147,7 +148,9 @@ class FunctionPanel extends React.Component {
 
         <div>
 
-          <div>
+
+
+
 
             <div className={classes.root}>
               <AppBar className={classes.nav} position="static">
@@ -170,7 +173,7 @@ class FunctionPanel extends React.Component {
             </div>
 
 
-          </div>
+
 
           <Grid
               container
