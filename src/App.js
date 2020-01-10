@@ -49,3 +49,11 @@ function App() {
 }
 
 export default App;
+
+
+
+var customer = { name: "Foo" }
+var card = { amount: 10, product: "Bar", unitprice: 100 }
+var message = `Hello [CUSTOMERNAME], want to buy [CARDAMOUNT] [CARDPRODUCT] for a total of [TOTAL] bucks?`
+
+console.log(card.amount)
