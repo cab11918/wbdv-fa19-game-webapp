@@ -33,6 +33,7 @@ const useStyles = ({
     borderRadius: 5
 
   }
+  
 });
 
 class SimpleTable extends React.Component {
